@@ -1,0 +1,24 @@
+require("./global");
+
+const config = require("../config"),
+  expressLoader = require("./express"),
+  databaseLoader = require("./database"),
+  eventLoader = require('./event'),
+  subscriberLoader = require('./subscriber'),
+  migrationLoader = require('./migration')
+
+module.exports = async () => {
+  global.config = config;
+
+  global.events = eventLoader()
+
+  global.database = await databaseLoader();
+  console.log("Database Initialized");
+
+  migrationLoader()
+
+  global.server = await expressLoader();
+  console.log("Express Initialized");
+
+  subscriberLoader()
+};
