@@ -1,0 +1,50 @@
+module.exports = {
+  create_permissions_table: `
+    CREATE TABLE
+      permissions ( 
+        id INT NOT NULL AUTO_INCREMENT,
+        title VARCHAR(255),
+        code VARCHAR(255) NOT NULL UNIQUE,
+        description VARCHAR(255),
+        PRIMARY KEY (id)
+      )`,
+  create_roles_table: `
+    CREATE TABLE
+      roles ( 
+        id INT NOT NULL AUTO_INCREMENT,
+        title VARCHAR(255),
+        slug VARCHAR(255),
+        description VARCHAR(255),
+        created_at TIMESTAMP DEFAULT now(),
+        updated_at TIMESTAMP DEFAULT now(),
+        deleted_at TIMESTAMP NULL,
+        PRIMARY KEY (id)
+      )`,
+  create_role_permissions_table: `
+    CREATE TABLE
+      role_permissions ( 
+        id INT NOT NULL AUTO_INCREMENT,
+        role_id int,
+        permission_id int,
+        created_at TIMESTAMP DEFAULT now(),
+        PRIMARY KEY (id),
+        FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE,
+        FOREIGN KEY (permission_id) REFERENCES permissions(id) ON DELETE CASCADE
+      )`,
+  create_users_table: `
+    CREATE TABLE
+      users ( 
+        id INT NOT NULL AUTO_INCREMENT,
+        first_name VARCHAR(255),
+        last_name VARCHAR(255),
+        username VARCHAR(255) NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        email VARCHAR(255),
+        role_id INT NULL DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT now(),
+        updated_at TIMESTAMP DEFAULT now(),
+        deleted_at TIMESTAMP NULL,
+        PRIMARY KEY (id),
+        FOREIGN KEY (role_id) REFERENCES roles(id)
+      )`,
+}
