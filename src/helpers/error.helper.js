@@ -80,3 +80,5 @@ class CustomError extends Error {
     // this.date = new Date()
   }
 }
+
+module.exports.CustomError = CustomError

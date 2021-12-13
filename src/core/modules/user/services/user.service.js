@@ -1,11 +1,12 @@
 const
   CrudService = require(`${__basedir}/core/services/crud.service`),
-  { hash } = require(`${__basedir}/helpers/encryption.helper`)
+  { hashPassword } = require(`${__basedir}/helpers/encryption.helper`)
 
 module.exports = class extends CrudService {
   constructor() {
     super()
     this.table = 'users'
+    this.showColumns = ["id, first_name, last_name", "email", "username", "role_id", "created_at", "updated_at", "deleted_at"]
   }
 
   /*
@@ -17,7 +18,7 @@ module.exports = class extends CrudService {
   async store(data) {
     await this.validate(data)
 
-    data.password = hash("sha256", data.password)
+    data.password = hashPassword(data.password)
 
     const
       fData = this.formatStoreData(data),

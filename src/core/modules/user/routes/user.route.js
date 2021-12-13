@@ -10,7 +10,7 @@ module.exports = {
       {
         path: 'users',
         children: [
-          ...crudRoutes(userController),
+          ...crudRoutes(userController, "user"),
         ]
       }
     ]

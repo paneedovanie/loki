@@ -10,7 +10,7 @@ module.exports = {
       {
         path: 'roles',
         children: [
-          ...crudRoutes(roleController),
+          ...crudRoutes(roleController, "role"),
         ]
       }
     ]

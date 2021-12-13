@@ -47,4 +47,14 @@ module.exports = {
         PRIMARY KEY (id),
         FOREIGN KEY (role_id) REFERENCES roles(id)
       )`,
+  create_tokens_table: `
+    CREATE TABLE
+      tokens ( 
+        id INT NOT NULL AUTO_INCREMENT,
+        token VARCHAR(255),
+        user_id INT NULL DEFAULT NULL,
+        created_at TIMESTAMP DEFAULT now(),
+        PRIMARY KEY (id),
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )`,
 }

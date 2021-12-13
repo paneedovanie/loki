@@ -3,6 +3,22 @@ const BaseService = require(`./base.service`)
 module.exports = class extends BaseService {
   constructor() {
     super()
+
+    this.showColumns = []
+  }
+
+  /*
+  *   # Return all columns
+  *
+  *   @return array result
+  */
+  columns() {
+    let string = ""
+
+    for (const col of this.showColumns)
+      string += (string === "" ? "" : ", ") + col
+
+    return string === "" ? "*" : string
   }
 
   /*
@@ -11,7 +27,7 @@ module.exports = class extends BaseService {
   *   @return array result
   */
   async index() {
-    const sql = `SELECT * FROM ${this.table} WHERE deleted_at IS NULL`;
+    const sql = `SELECT ${this.columns()} FROM ${this.table} WHERE deleted_at IS NULL`;
 
     return this.query(sql)
   }
@@ -23,8 +39,8 @@ module.exports = class extends BaseService {
   *   @return Object  result
   */
   async read(id) {
-    const sql = `SELECT * FROM ${this.table} WHERE id = ${id}`,
-      result = await this.query(sql)
+    const sql = `SELECT ${this.columns()} FROM ${this.table} WHERE id = ?`,
+      result = await this.query(sql, [id])
 
     return result[0]
   }
@@ -57,9 +73,9 @@ module.exports = class extends BaseService {
 
     const
       fData = this.formatUpdateData(data),
-      sql = `UPDATE ${this.table} SET ${fData}, updated_at = now() WHERE id = ${id}`;
+      sql = `UPDATE ${this.table} SET ${fData}, updated_at = now() WHERE id = ?`;
 
-    return this.query(sql)
+    return this.query(sql, [id])
   }
 
   /*
@@ -69,9 +85,9 @@ module.exports = class extends BaseService {
   *   @return Object  result
   */
   async deletePermanently(id) {
-    const sql = `DELETE FROM ${this.table} WHERE id = ${id}`;
+    const sql = `DELETE FROM ${this.table} WHERE id = ?`;
 
-    return this.query(sql)
+    return this.query(sql, [id])
   }
 
   /*
@@ -80,7 +96,7 @@ module.exports = class extends BaseService {
   *   @return array result
   */
   async trashed() {
-    const sql = `SELECT * FROM ${this.table} WHERE deleted_at IS NOT NULL`;
+    const sql = `SELECT ${this.columns()} FROM ${this.table} WHERE deleted_at IS NOT NULL`;
 
     return this.query(sql)
   }
@@ -92,9 +108,9 @@ module.exports = class extends BaseService {
   *   @return Object  result
   */
   async trash(id) {
-    const sql = `UPDATE ${this.table} SET deleted_at = now() WHERE id = ${id}`;
+    const sql = `UPDATE ${this.table} SET deleted_at = now() WHERE id = ?`;
 
-    return this.query(sql)
+    return this.query(sql, [id])
   }
 
   /*
@@ -104,8 +120,8 @@ module.exports = class extends BaseService {
   *   @return Object  result
   */
   async restore(id) {
-    const sql = `UPDATE ${this.table} SET deleted_at = null WHERE id = ${id}`;
+    const sql = `UPDATE ${this.table} SET deleted_at = null WHERE id = ?`;
 
-    return this.query(sql)
+    return this.query(sql, [id])
   }
 }

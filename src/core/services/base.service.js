@@ -1,17 +1,12 @@
 const
   joi = require('joi'),
-  { validationError, formatValidationError } = require(`${__basedir}/helpers/error.helper`)
-
-joi.objectId = require('joi-objectid')(joi)
+  { validationError, formatValidationError } = require(`${__basedir}/helpers/error.helper`),
+  { query } = require(`${__basedir}/helpers/database.helper`),
+  { htmlDecode } = require(`${__basedir}/helpers/string.helper`)
 
 module.exports = class {
   constructor() {
-    this.query = (sql, options) => new Promise((res, rej) => {
-      database.query(sql, options, (err, queryResult) => {
-        if (err) rej(err)
-        res(queryResult)
-      });
-    })
+    this.query = query
   }
 
   /*
@@ -27,8 +22,11 @@ module.exports = class {
     }
 
     for (const key of Object.keys(data)) {
+      const isString = typeof data[key] === 'string'
+
       newData.fields += (newData.fields !== "" ? ", " : "") + key
-      newData.values.push(data[key])
+
+      newData.values.push(isString ? htmlDecode(data[key]) : data[key])
     }
 
     return newData
@@ -48,7 +46,7 @@ module.exports = class {
 
       newData += (newData !== "" ? ", " : "")
       if (isString)
-        newData += `${key} = "${data[key]}"`
+        newData += `${key} = "${htmlDecode(data[key])}"`
       else
         newData += `${key} = ${data[key]}`
     }

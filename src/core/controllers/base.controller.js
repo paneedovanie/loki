@@ -6,9 +6,9 @@ module.exports = class BaseController {
       OK: 200,
       CREATED: 201,
       ACCEPTED: 202,
-      FORBIDDEN: 403,
-      UNAUTHORIZED: 401,
       BAD_REQUEST: 400,
+      UNAUTHORIZED: 401,
+      FORBIDDEN: 403,
       NOT_FOUND: 404,
       SERVER_ERROR: 500
     }
@@ -21,12 +21,15 @@ module.exports = class BaseController {
       try {
         res.status(statusCode).json(await fun())
       } catch (err) {
-        if (err.name === 'ValidationError')
+        if (err.name === 'Unauthorized')
+          statusCode = this.statusCode.UNAUTHORIZED
+        else if (err.name === 'ValidationError')
           statusCode = this.statusCode.BAD_REQUEST
         else
           statusCode = this.statusCode.SERVER_ERROR
         res.status(statusCode).json(apiError(err))
       }
+
     }
   }
 }
