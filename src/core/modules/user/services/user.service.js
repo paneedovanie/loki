@@ -18,15 +18,28 @@ module.exports = class extends CrudService {
   async store(data) {
     await this.validate(data)
 
-    data.password = hashPassword(data.password)
-
+    const tempData = {
+      ...data,
+      password: hashPassword(data.password)
+    }
     const
-      fData = this.formatStoreData(data),
-      sql = `INSERT INTO ${this.table} (${fData.fields}) VALUES ?`;
+      fData = this.formatStoreData(tempData),
+      sql = `INSERT INTO ${this.table} (${fData.fields}) VALUES ?`,
+      result = await this.query(sql, [[fData.values]]),
+      added = await this.query(`
+        SELECT ${this.showColumns} 
+        FROM ${this.table} 
+        WHERE id = ? LIMIT 1`, result.insertId)
 
-    return this.query(sql, [[fData.values]])
+    return added[0]
   }
 
+  /*
+  *   # Rules
+  *
+  *   @params Joi     v
+  *   @return Object  result
+  */
   rules(v) {
     return {
       first_name: v.string().required().max(255),
@@ -35,6 +48,23 @@ module.exports = class extends CrudService {
       password: v.string().required().max(255),
       email: v.string().email().required().max(255),
       role_id: v.number().required()
+    }
+  }
+
+  /*
+  *   # Dummy random data
+  *
+  *   @params DummyHelper h
+  *   @return Object      result
+  */
+  async dummy(h) {
+    return {
+      first_name: h.name(),
+      last_name: h.name(),
+      username: h.word({ length: '6-10' }),
+      password: h.word({ length: '6-10' }),
+      email: h.email(),
+      role_id: 2
     }
   }
 }

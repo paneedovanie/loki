@@ -2,10 +2,13 @@ const cmds = require(`${__basedir}/database/migrations`),
   fs = require('fs'),
   migratedPath = 'storage/cache/migrations.txt',
   databaseLoader = require("../../loaders/database"),
+  testDatabaseLoader = require("../../loaders/testDatabase"),
   { getList, query } = require('../../helpers/database.helper')
+
 module.exports = async () => {
 
   global.database = await databaseLoader()
+  testDatabase = await testDatabaseLoader()
 
   switch (config.dbType) {
     case 'mysql':
@@ -23,6 +26,7 @@ module.exports = async () => {
       }
       if (sql !== "") {
         await query(sql)
+        await testDatabase.query(sql)
 
         fs.appendFileSync(migratedPath, migrating)
         console.log('\x1b[32m%s\x1b[0m', 'Migration completed!');
@@ -30,4 +34,5 @@ module.exports = async () => {
   }
 
   database.end()
+  testDatabase.end()
 }

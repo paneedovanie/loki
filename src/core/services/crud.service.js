@@ -3,7 +3,6 @@ const BaseService = require(`./base.service`)
 module.exports = class extends BaseService {
   constructor() {
     super()
-
     this.showColumns = []
   }
 
@@ -22,14 +21,14 @@ module.exports = class extends BaseService {
   }
 
   /*
-  *   # Return all items on the table
+  *   # Return paginated items on the table
   *
   *   @return array result
   */
-  async index() {
-    const sql = `SELECT ${this.columns()} FROM ${this.table} WHERE deleted_at IS NULL`;
+  index(options) {
+    options.where = `deleted_at IS NULL`
 
-    return this.query(sql)
+    return this.paginate(options)
   }
 
   /*
@@ -56,9 +55,14 @@ module.exports = class extends BaseService {
 
     const
       fData = this.formatStoreData(data),
-      sql = `INSERT INTO ${this.table} (${fData.fields}) VALUES ?`;
+      sql = `INSERT INTO ${this.table} (${fData.fields}) VALUES ?`,
+      result = await this.query(sql, [[fData.values]]),
+      added = await this.query(`
+        SELECT ${this.showColumns} 
+        FROM ${this.table} 
+        WHERE id = ? LIMIT 1`, result.insertId)
 
-    return this.query(sql, [[fData.values]])
+    return added[0]
   }
 
   /*
@@ -73,9 +77,12 @@ module.exports = class extends BaseService {
 
     const
       fData = this.formatUpdateData(data),
-      sql = `UPDATE ${this.table} SET ${fData}, updated_at = now() WHERE id = ?`;
+      sql = `UPDATE ${this.table} SET ${fData}, updated_at = now() WHERE id = ?; SELECT ${this.showColumns} 
+        FROM ${this.table} 
+        WHERE id = ? LIMIT 1`,
+      result = await this.query(sql, [id, id])
 
-    return this.query(sql, [id])
+    return result[1][0]
   }
 
   /*
@@ -91,14 +98,14 @@ module.exports = class extends BaseService {
   }
 
   /*
-  *   # Return all trashed items on the table
+  *   # Return paginated trashed items o this.query(sql) the table
   *
   *   @return array result
   */
-  async trashed() {
-    const sql = `SELECT ${this.columns()} FROM ${this.table} WHERE deleted_at IS NOT NULL`;
+  trashed(options) {
+    options.where = `deleted_at IS NOT NULL`
 
-    return this.query(sql)
+    return this.paginate(options)
   }
 
   /*

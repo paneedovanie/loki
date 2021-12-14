@@ -9,7 +9,7 @@ module.exports = async () => {
         port: config.dbPort,
         user: config.dbUser,
         password: config.dbPass,
-        database: config.environment === 'test' ? 'loki_test' : config.dbName,
+        database: 'loki_test',
         multipleStatements: true
       })
 
@@ -19,7 +19,7 @@ module.exports = async () => {
     default:
       const MongooseHelper = require('../helpers/mongoose.helper')
 
-      database = new MongooseHelper(`mongodb+srv://${config.dbUser}:${config.dbPass}@${config.dbHost}/${config.environment === 'test' ? 'loki_test' : config.dbName}`)
+      database = new MongooseHelper(`mongodb+srv://${config.dbUser}:${config.dbPass}@${config.dbHost}/${'loki_test'}`)
 
       await database.connect();
 

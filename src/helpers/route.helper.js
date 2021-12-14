@@ -80,6 +80,13 @@ module.exports.crudRoutes = (controller, suffix = "", exclusion = []) => {
       callback: controller.index.bind(controller)
     },
     {
+      type: 'trashed',
+      path: 'trashed',
+      method: 'get',
+      middlewares: auth(`${suffix}.trashed`),
+      callback: controller.trashed.bind(controller)
+    },
+    {
       type: 'read',
       path: ':id',
       middlewares: auth(`${suffix}.read`),
@@ -112,13 +119,6 @@ module.exports.crudRoutes = (controller, suffix = "", exclusion = []) => {
       method: 'delete',
       middlewares: auth(`${suffix}.delete`),
       callback: controller.deletePermanently.bind(controller)
-    },
-    {
-      type: 'trashed',
-      path: 'trashed',
-      method: 'get',
-      middlewares: auth(`${suffix}.trashed`),
-      callback: controller.trashed.bind(controller)
     },
     {
       type: 'trash',

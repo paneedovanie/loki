@@ -16,6 +16,8 @@ module.exports = async () => {
       const sql = `DROP DATABASE ${config.dbName}; CREATE DATABASE ${config.dbName};`
       await query(sql)
 
+      await query(`DROP DATABASE loki_test; CREATE DATABASE loki_test;`)
+
       if (fs.existsSync(seededPath))
         fs.unlinkSync(seededPath)
       if (fs.existsSync(migratedPath))

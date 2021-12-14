@@ -62,7 +62,7 @@ module.exports = async () => {
     }
   });
 
-  const roles = await roleService.index()
+  const roles = await roleService.get()
 
   questions.push({
     type: 'rawlist',

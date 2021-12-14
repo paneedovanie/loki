@@ -8,7 +8,7 @@ module.exports = class extends BaseController {
 
   async index(req, res) {
     this.apiResponse(res, async () => {
-      return this.service.index()
+      return this.service.index(req.query)
     }, this.statusCode.OK)
   }
 
@@ -38,7 +38,7 @@ module.exports = class extends BaseController {
 
   async trashed(req, res) {
     this.apiResponse(res, async () => {
-      return this.service.trashed()
+      return this.service.trashed(req.query)
     }, this.statusCode.ACCEPTED)
   }
 

@@ -46,7 +46,6 @@ module.exports.auth = (code) => async (req, res, next) => {
       next()
     }
   } catch (err) {
-    console.log(err)
     res.status(400)
       .json({ errors: ['Invalid token'] })
   }

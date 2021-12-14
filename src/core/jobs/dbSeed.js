@@ -2,11 +2,13 @@
 const cmds = require("../../database/seeders"),
   fs = require('fs'),
   databaseLoader = require("../../loaders/database"),
+  testDatabaseLoader = require("../../loaders/testDatabase"),
   { getList, query } = require('../../helpers/database.helper'),
   seededPath = 'storage/cache/seeders.txt'
 
 module.exports = async () => {
   global.database = await databaseLoader()
+  testDatabase = await testDatabaseLoader()
 
   switch (config.dbType) {
     case 'mysql':
@@ -25,6 +27,7 @@ module.exports = async () => {
 
       if (sql !== "") {
         await query(sql)
+        await testDatabase.query(sql)
 
         fs.appendFileSync(seededPath, seeding)
         console.log('\x1b[32m%s\x1b[0m', 'Seeder completed!');
@@ -32,4 +35,5 @@ module.exports = async () => {
   }
 
   database.end()
+  testDatabase.end()
 }
