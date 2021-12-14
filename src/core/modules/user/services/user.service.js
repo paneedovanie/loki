@@ -29,7 +29,7 @@ module.exports = class extends CrudService {
       added = await this.query(`
         SELECT ${this.showColumns} 
         FROM ${this.table} 
-        WHERE id = ? LIMIT 1`, result.insertId)
+        WHERE id = ? LIMIT 1`, [result.insertId])
 
     return added[0]
   }

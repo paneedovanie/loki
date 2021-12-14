@@ -67,25 +67,15 @@ describe('User Service - UNIT TEST', () => {
   })
 
   test('restore function should restore data from trashed', async () => {
-    const
-      result = await userService.restore(insertedData.id),
-      index = await userService.index({})
+    const result = await userService.restore(insertedData.id)
 
-    editedData = await userService.read(insertedData.id)
-
-    expect(index).toEqual({
-      data: expect.any(Array),
-      options: expect.any(Object),
-    })
-
-    expect(index.data[0]).toEqual(editedData)
+    expect(result.affectedRows).toEqual(1)
   })
 
   test('deletePermanently function should delete user from table', async () => {
-    await userService.deletePermanently(insertedData.id)
+    const result = await userService.deletePermanently(insertedData.id)
 
-    expect((await userService.index({})).data).toEqual([])
-    expect((await userService.trashed({})).data).toEqual([])
+    expect(result.affectedRows).toEqual(1)
   })
 })
 

@@ -58,7 +58,7 @@ module.exports = class extends BaseService {
       sql = `INSERT INTO ${this.table} (${fData.fields}) VALUES ?`,
       result = await this.query(sql, [[fData.values]]),
       added = await this.query(`
-        SELECT ${this.showColumns} 
+        SELECT ${this.columns()} 
         FROM ${this.table} 
         WHERE id = ? LIMIT 1`, result.insertId)
 
@@ -77,7 +77,7 @@ module.exports = class extends BaseService {
 
     const
       fData = this.formatUpdateData(data),
-      sql = `UPDATE ${this.table} SET ${fData}, updated_at = now() WHERE id = ?; SELECT ${this.showColumns} 
+      sql = `UPDATE ${this.table} SET ${fData}, updated_at = now() WHERE id = ?; SELECT ${this.columns()} 
         FROM ${this.table} 
         WHERE id = ? LIMIT 1`,
       result = await this.query(sql, [id, id])
