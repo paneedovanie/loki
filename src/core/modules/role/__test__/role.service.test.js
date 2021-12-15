@@ -69,13 +69,13 @@ describe('Role Service - UNIT TEST', () => {
   test('restore function should restore data from trashed', async () => {
     const result = await roleService.restore(insertedData.id)
 
-    expect(result.affectedRows).toEqual(1)
+    expect(result.affectedRows).toBeTruthy()
   })
 
   test('deletePermanently function should delete role from table', async () => {
     const result = await roleService.deletePermanently(insertedData.id)
 
-    expect(result.affectedRows).toEqual(1)
+    expect(result.affectedRows).toBeTruthy()
   })
 
   test(`getPermissions function should return role's permissions`, async () => {

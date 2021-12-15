@@ -52,7 +52,7 @@ describe('User Service - UNIT TEST', () => {
     const result = await userService.trash(insertedData.id)
     editedData = await userService.read(insertedData.id)
 
-    expect(result.changedRows).toEqual(1)
+    expect(result.changedRows).toBeTruthy()
   })
 
   test('trashed function should return data and options', async () => {
@@ -69,13 +69,13 @@ describe('User Service - UNIT TEST', () => {
   test('restore function should restore data from trashed', async () => {
     const result = await userService.restore(insertedData.id)
 
-    expect(result.affectedRows).toEqual(1)
+    expect(result.affectedRows).toBeTruthy()
   })
 
   test('deletePermanently function should delete user from table', async () => {
     const result = await userService.deletePermanently(insertedData.id)
 
-    expect(result.affectedRows).toEqual(1)
+    expect(result.affectedRows).toBeTruthy()
   })
 })
 
