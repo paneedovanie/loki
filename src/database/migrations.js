@@ -57,4 +57,17 @@ module.exports = {
         PRIMARY KEY (id),
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
       )`,
-}
+  add_provider_column_to_users_table: `
+    ALTER TABLE users
+    ADD provider VARCHAR(255) NULL DEFAULT NULL`,
+  add_provider_id_column_to_users_table: `
+    ALTER TABLE users
+    ADD provider_id INT NULL DEFAULT NULL`,
+  modify_provider_id_column_of_users_table: `
+    ALTER TABLE users
+    MODIFY COLUMN provider_id VARCHAR(255) NULL DEFAULT NULL`,
+  modify_cred_column_of_users_table: `
+    ALTER TABLE users
+    MODIFY COLUMN username VARCHAR(255)  NULL DEFAULT NULL,
+    MODIFY COLUMN password VARCHAR(255) NULL DEFAULT NULL`,
+};

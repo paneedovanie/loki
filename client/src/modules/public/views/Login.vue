@@ -10,6 +10,9 @@
       v-model="resource.data.password"
     ></v-text-field>
     <v-btn @click="submit">Login</v-btn>
+    <div class="mt-3">
+      <v-btn @click="usersSSOLogin">Login using Users SSO</v-btn>
+    </div>
   </div>
 </template>
 
@@ -25,6 +28,7 @@ export default {
   methods: {
     ...mapActions({
       login: "auth/login",
+      sso: "auth/sso",
     }),
 
     async submit() {
@@ -36,13 +40,49 @@ export default {
         this.$router.push(to ? to : { name: "dashboard" });
         this.resource.setData();
       } catch (error) {
-        console.log(error);
         this.resource.setErrorMessage(error.response.data.message);
         this.$refs.validation.setErrors(error.response.data.details);
       }
 
       this.resource.load(false);
     },
+
+    usersSSOLogin (){
+       // Initialize required data
+        const USERS_DOMAIN = "https://user-s.herokuapp.com", // Define Users API domain
+            APP_ID = "61ba9a34ffc2610016b75bb0", // Define your app id here
+            APP_KEY = "fa4c9db6f1e0ea67c11e9ae0ed23fc5c", // Define your app key here
+            YOUR_APP_DOMAIN = window.location.origin // Define your app domain
+
+        // Open the Users SSO page to new window
+        // You may edit the second and the third arguments based on your need
+        window.open(
+            `${USERS_DOMAIN}/sso?appId=${APP_ID}&appKey=${APP_KEY}&domain=${YOUR_APP_DOMAIN}`, // URL to access Users SSO page
+            "",
+            "toolbar=yes,scrollbars=no,resizable=yes,top=100,left=500,width=600,height=800"
+        );
+
+        // Listen to window incoming messages
+        window.addEventListener("message", async (e) => {
+            if(e.origin !== USERS_DOMAIN) return; // Ignore message if not coming from Users domain
+            const { user } = e.data // Extract token and user details from message
+            
+            // You may now process the token and user details
+            // Please use token on request header like "Authorization: Bearer Token_Here"
+            try {
+              await this.sso(user);
+
+              const to = this.$route.query.to;
+
+              this.$router.push(to ? to : { name: "dashboard" });
+            } catch (error) {
+              this.resource.setErrorMessage(error.response.data.message);
+              this.$refs.validation.setErrors(error.response.data.details);
+            }
+
+            this.resource.load(false);
+        });
+    }
   },
 };
 </script>
