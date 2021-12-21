@@ -17,7 +17,7 @@ module.exports = class {
   *
   *   @return array result
   */
-  get() {
+  getAll() {
     let sql = `SELECT ${this.columns()} 
       FROM ${this.table} WHERE deleted_at IS NULL`
 
@@ -76,28 +76,43 @@ module.exports = class {
   *   @params Object  options
   *   @return Object  result
   */
-  async paginate({ page = 1, perPage = 10, where = null }) {
+  async paginate({ page = 1, itemsPerPage = 10, search = '', where = null }) {
     where = where ? "WHERE " + where : ""
 
     const
-      offset = (page - 1) * perPage,
+      offset = (page - 1) * itemsPerPage,
       countResult = await this.query(`SELECT COUNT(*) AS count FROM ${this.table} ${where}`),
       count = countResult[0].count,
-      totalPages = Math.ceil(count / perPage)
+      totalPages = Math.ceil(count / itemsPerPage)
 
     let sql = `SELECT ${this.columns()} 
       FROM ${this.table} ${where}`
-
-    sql += ` LIMIT ${perPage} OFFSET ${offset}`
-
-    return {
-      data: await this.query(sql, where),
-      options: {
-        page,
-        perPage,
-        totalPages,
-        prevPage: (page - 1) <= 0 ? null : (page - 1),
-        nextPage: (page + 1) > totalPages ? null : (page + 1)
+      
+    if(itemsPerPage > -1) {
+      sql += ` LIMIT ${itemsPerPage} OFFSET ${offset}`
+  
+      return {
+        data: await this.query(sql, where),
+        options: {
+          page,
+          itemsPerPage,
+          totalPages,
+          totalItems: count,
+          prevPage: (page - 1) <= 0 ? null : (page - 1),
+          nextPage: (page + 1) > totalPages ? null : (page + 1)
+        }
+      }
+    } else {
+      return {
+        data: await this.query(sql, where),
+        options: {
+          page: 1,
+          itemsPerPage: -1,
+          totalPages: 1,
+          totalItems: count,
+          prevPage: null,
+          nextPage: null
+        }
       }
     }
   }
@@ -110,7 +125,7 @@ module.exports = class {
   */
   async validate(data, id = null) {
     try {
-      await joi.object(this.rules(joi))
+      await joi.object(this.rules(joi, data, id))
         .custom(this.customRules.bind(this, data, id, validationError))
         .options({ abortEarly: false })
         .validateAsync(data)

@@ -7,4 +7,10 @@ module.exports = class extends CrudController {
     super()
     this.service = new RoleService
   }
+
+  getAll(req, res, next) {
+    this.apiResponse(res, async () => {
+      return this.service.getAll()
+    }, this.statusCode.OK)
+  }
 }

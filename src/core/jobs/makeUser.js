@@ -62,7 +62,7 @@ module.exports = async () => {
     }
   });
 
-  const roles = await roleService.get()
+  const roles = await roleService.getAll()
 
   questions.push({
     type: 'rawlist',

@@ -32,7 +32,7 @@ module.exports = class extends BaseController {
 
   async deletePermanently(req, res) {
     this.apiResponse(res, async () => {
-      return this.service.deletePermanently(req.params.id)
+      return this.service.deletePermanently(req.body.ids || req.params.id)
     }, this.statusCode.ACCEPTED)
   }
 
@@ -44,13 +44,13 @@ module.exports = class extends BaseController {
 
   async trash(req, res) {
     this.apiResponse(res, async () => {
-      return this.service.trash(req.params.id)
+      return this.service.trash(req.body.ids || req.params.id)
     }, this.statusCode.ACCEPTED)
   }
 
   async restore(req, res) {
     this.apiResponse(res, async () => {
-      return this.service.restore(req.params.id)
+      return this.service.restore(req.body.ids || req.params.id)
     }, this.statusCode.ACCEPTED)
   }
 }

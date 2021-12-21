@@ -73,7 +73,7 @@ module.exports = class extends BaseService {
   *   @return Object  result
   */
   async update(id, data) {
-    await this.validate(data)
+    await this.validate(data, id)
 
     const
       fData = this.formatUpdateData(data),
@@ -92,13 +92,13 @@ module.exports = class extends BaseService {
   *   @return Object  result
   */
   async deletePermanently(id) {
-    const sql = `DELETE FROM ${this.table} WHERE id = ?`;
+    const sql = `DELETE FROM ${this.table} WHERE id in (?)`;
 
     return this.query(sql, [id])
   }
 
   /*
-  *   # Return paginated trashed items o this.query(sql) the table
+  *   # Return paginated trashed items on the table
   *
   *   @return array result
   */
@@ -115,7 +115,7 @@ module.exports = class extends BaseService {
   *   @return Object  result
   */
   async trash(id) {
-    const sql = `UPDATE ${this.table} SET deleted_at = now() WHERE id = ?`;
+    const sql = `UPDATE ${this.table} SET deleted_at = now() WHERE id in (?)`;
 
     return this.query(sql, [id])
   }
@@ -127,7 +127,7 @@ module.exports = class extends BaseService {
   *   @return Object  result
   */
   async restore(id) {
-    const sql = `UPDATE ${this.table} SET deleted_at = null WHERE id = ?`;
+    const sql = `UPDATE ${this.table} SET deleted_at = null WHERE id in (?)`;
 
     return this.query(sql, [id])
   }

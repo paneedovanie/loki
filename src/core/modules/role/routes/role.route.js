@@ -10,6 +10,10 @@ module.exports = {
       {
         path: 'roles',
         children: [
+          {
+            path: 'getAll',
+            callback: roleController.getAll.bind(roleController)
+          },
           ...crudRoutes(roleController, "role"),
         ]
       }

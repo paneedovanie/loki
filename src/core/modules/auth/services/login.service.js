@@ -37,7 +37,7 @@ module.exports = class extends BaseService {
         delete user.password
 
         user.role = await this.roleService.read(user.role_id)
-        user.role.permissions = (await this.roleService.getPermissions(user.role_id)).map(item => item.title)
+        user.role.permissions = (await this.roleService.getPermissions(user.role_id)).map(item => item.code)
 
         const token = jwt.sign({ id: user.id }, config.secret)
 

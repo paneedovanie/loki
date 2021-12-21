@@ -1,3 +1,6 @@
 <template>
-  <h1>Dashboard</h1>
+  <div>
+    <page-header></page-header>
+    
+  </div>
 </template>
