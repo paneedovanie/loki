@@ -8,6 +8,7 @@ module.exports = class extends BaseController {
   }
 
   invoke(req, res) {
+    console.log('sso')
     this.apiResponse(
       res,
       async () => {

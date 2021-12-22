@@ -1,5 +1,4 @@
 const { CustomError } = require(`${__basedir}/helpers/error.helper`),
-  { verifyPassword } = require(`${__basedir}/helpers/encryption.helper`),
   BaseService = require(`${__basedir}/core/services/base.service`),
   jwt = require("jsonwebtoken"),
   RoleService = require(`../../role/services/role.service`);
@@ -48,7 +47,7 @@ module.exports = class extends BaseService {
       ]);
 
       return { user, token };
-    } catch (err) {}
+    } catch (error) { log(error) }
 
     throw new CustomError("Unauthorized", "Invalid credential");
   }

@@ -6,7 +6,8 @@ const {
   BAD_REQUEST,
   NOT_FOUND,
   SERVER_ERROR
-} = require("./api.helper")
+} = require("./api.helper"),
+  fs = require('fs')
 
 module.exports.catchError = function (
   fun,
@@ -82,3 +83,18 @@ class CustomError extends Error {
 }
 
 module.exports.CustomError = CustomError
+
+module.exports.log = function (error) {
+  const path = 'storage/logs/app.log',
+    timestamp = new Date
+
+  if (!fs.existsSync(path)) {
+    fs.mkdir('storage/logs', { recursive: true }, (err) => {
+      if (err) return rej(err);
+
+      fs.writeFileSync(path, `[${timestamp}]\n${error.stack}\n\n`)
+    })
+  } else fs.appendFileSync(path, `[${timestamp}]\n${error.stack}\n\n`)
+
+  throw error
+}

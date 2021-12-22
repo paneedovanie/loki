@@ -6,6 +6,7 @@ export default class {
     this.isPrestine = true
     this.response = null
     this.isLoading = true
+    this.errorMessage = null
   }
 
   async getResource(options) {
@@ -58,5 +59,9 @@ export default class {
     data = formData
 
     return data
+  }
+
+  setErrorMessage(message) {
+    this.errorMessage = message
   }
 }

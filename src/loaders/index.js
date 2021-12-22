@@ -7,15 +7,17 @@ const config = require("../config"),
   subscriberLoader = require('./subscriber')
 
 module.exports = async () => {
-  global.config = config;
+  try {
+    global.config = config;
 
-  global.events = eventLoader()
+    global.events = eventLoader()
 
-  global.database = await databaseLoader();
-  console.log("Database Initialized");
+    global.database = await databaseLoader();
+    console.log("Database Initialized");
 
-  global.server = await expressLoader();
-  console.log("Express Initialized");
+    global.server = await expressLoader();
+    console.log("Express Initialized");
 
-  subscriberLoader()
+    subscriberLoader()
+  } catch (error) { log(error) }
 };
