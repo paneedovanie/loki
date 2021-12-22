@@ -11,6 +11,11 @@ const state = () => ({
 const getters = {
   auth: (state) => state.auth,
   isAuthenticated: (state) => state.auth.token && state.auth.user && true,
+  hasPermission: (state) => (code) => {
+    const foundPermission = state.auth.user.role.permissions.find(item => item === code)
+    
+    return (!code || foundPermission) && true
+  }
 };
 
 const mutations = {

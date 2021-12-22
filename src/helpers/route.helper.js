@@ -37,6 +37,13 @@ module.exports.resourceRoutes = (controller, suffix = "", exclusion = []) => {
     },
     {
       type: 'delete',
+      path: ':id/delete',
+      method: 'put',
+      middlewares: auth(`${suffix}.delete`),
+      callback: controller.deletePermanently.bind(controller)
+    },
+    {
+      type: 'delete',
       path: ':id',
       method: 'delete',
       middlewares: auth(`${suffix}.delete`),
@@ -112,6 +119,13 @@ module.exports.crudRoutes = (controller, suffix = "", exclusion = []) => {
       method: 'patch',
       middlewares: auth(`${suffix}.update`),
       callback: controller.update.bind(controller)
+    },
+    {
+      type: 'delete',
+      path: ':id/delete',
+      method: 'put',
+      middlewares: auth(`${suffix}.delete`),
+      callback: controller.deletePermanently.bind(controller)
     },
     {
       type: 'delete',

@@ -1,34 +1,19 @@
 export default class {
   constructor() {
     this.data = {}
-    this.errors = {}
-    this.isFetching = false
+    this.isFetching = true
     this.isPrestine = true
+<<<<<<< HEAD
     this.response = null
     this.isLoading = true
+=======
+    this.isLoading = false
+>>>>>>> 3d0326fff5f5f3a69ef465f12f73eeed78d50af4
     this.errorMessage = null
   }
 
-  async getResource(options) {
-    const data = await this.request(options)
-    this.data = data
-    this.load(false)
-  }
-
-  async request(options = { method: 'get', url: '' }) {
-    this.updateErrors()
-    this.fetch()
-    let data = null
-    try {
-      const response = await window.axios(options)
-      data = response.data
-    } catch (err) {
-      if (!err.response) console.error(err)
-      this.updateErrors(err.response ? err.response.data : err)
-    } finally {
-      this.fetch(false)
-    }
-    return data
+  setData(val = {}) {
+    this.data = val
   }
 
   fetch(val = true) {
@@ -43,12 +28,12 @@ export default class {
     this.isPrestine = val
   }
 
-  updateErrors(errors = {}) {
-    this.errors = errors
+  setErrorMessage(val = null) {
+    this.errorMessage = val
   }
 
-  setData(data = {}) {
-    this.data = data
+  isDisabled() {
+    return this.isLoading || this.isPrestine
   }
 
   readyData(form) {
@@ -61,7 +46,29 @@ export default class {
     return data
   }
 
-  setErrorMessage(message) {
-    this.errorMessage = message
+  getData(fields = null) {
+    if (!fields) return this.data
+    let tempData = {}
+    for (const key of Object.keys(this.data)) {
+      if (!fields.includes(key)) continue
+      tempData[key] = this.data[key]
+    }
+
+    return tempData
+  }
+
+  async request(options = { method: 'get', url: '' }) {
+    this.load()
+    let data = null
+    try {
+      const response = await window.axios(options)
+      data = response.data
+    } catch (err) {
+      if (!err.response) console.error(err)
+    } finally {
+      this.fetch(false)
+      this.load(false)
+    }
+    return data
   }
 }

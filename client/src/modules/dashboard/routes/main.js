@@ -2,6 +2,9 @@ export default [
   {
     path: '',
     name: 'dashboard',
-    component: () => import('../views/Dashboard')
+    component: () => import('../views/Dashboard'),
+    meta: {
+      title: 'Dashboard'
+    }
   },
 ]

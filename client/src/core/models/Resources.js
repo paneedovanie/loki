@@ -5,49 +5,27 @@ export default class extends Resource {
     super()
     this.headers = []
     this.data = []
-    this.search = ""
     this.options = {
-      nextPage: null,
+      search: '',
       page: 1,
-      pages: {1: null},
-      prevPage: null,
-      totalItems: 0,
-      totalPages: 1,
       itemsPerPage: 10
     }
     this.fetchCount = 0
   }
 
-  updateData ( response ) {
-    const { 
-      list,
-      itemsPerPage,
-      nextPage,
-      page,
-      pages,
-      prevPage,
-      totalItems,
-      totalPages
-    } = response
-
-    this.data = list
-
-    this.options = {
-      ...this.options,
-      itemsPerPage,
-      nextPage,
-      page,
-      pages,
-      prevPage,
-      totalItems,
-      totalPages
-    } 
+  updateData ( { data, options} ) {
+    this.data = data
+    this.options = { ...this.options, ...options }
   }
 
-  async getResources ( options = null) {
+  async getResources ( options = null, cb) {
+    this.fetch()
+    this.data = []
     const data = await this.request( options )
     this.updateData( data )
-    this.load( false )
+    this.fetch( false )
+    if(cb)
+      cb(this.options)
   }
 
   optionsChanged ( options ) {
