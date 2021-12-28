@@ -12,15 +12,13 @@ jobs:
         environment:
           DB_TYPE: mysql
           DB_HOST: localhost
-          DB_USER: edo
-          DB_PASS: edo
+          DB_USER: root
       - image: circleci/mysql:8.0.4
         command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin"]
         environment:
+          - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
           - MYSQL_ROOT_HOST: '%'
-          - MYSQL_ROOT_PASSWORD: root
-          - MYSQL_USER: edo
-          - MYSQL_PASSWORD: edo
+          - MYSQL_USER: root
     steps:
       - checkout
       - run: 
