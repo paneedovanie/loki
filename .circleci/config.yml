@@ -13,6 +13,7 @@ jobs:
           DB_TYPE: mysql
           DB_HOST: localhost
           DB_USER: root
+          DB_NAME: loki
       - image: circleci/mysql:8.0.4
         command: [--default-authentication-plugin=mysql_native_password]
         environment:
@@ -25,8 +26,14 @@ jobs:
           name: Install Dependencies
           command: npm install
       - run: 
-          name: Setup Database Schema
-          command: npm run exec db:refresh
+          name: Create Database
+          command: npm run exec db:fresh
+      - run: 
+          name: Database migration
+          command: npm run exec migrate
+      - run: 
+          name: Database seed
+          command: npm run exec db:seed
       - run:
           name: Run Unit Tests
           command: npm run test:unit
