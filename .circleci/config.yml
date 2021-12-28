@@ -26,8 +26,11 @@ jobs:
           name: Install Dependencies
           command: npm install
       - run: 
-          name: Create Database
-          command: npm run exec db:fresh
+          name: Create Main Database
+          command: mysql -h 127.0.0.1 -u root -e "CREATE DATABASE loki"
+      - run: 
+          name: Create Test Database
+          command: mysql -h 127.0.0.1 -u root -e "CREATE DATABASE loki_test"
       - run: 
           name: Database migration
           command: npm run exec migrate
