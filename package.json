@@ -6,7 +6,7 @@
   "scripts": {
     "server": "nodemon ./src/index",
     "exec": "node ./src/cli",
-    "test:unit": "cross-env NODE_ENV=test jest --testTimeout=10000 --detectOpenHandles --verbose"
+    "test:unit": "cross-env NODE_ENV=test DB_TYPE=mysql DB_NAME=loki_test DB_HOST=localhost DB_USER=edo DB_PASS=edo jest --testTimeout=10000 --detectOpenHandles --verbose"
   },
   "keywords": [],
   "author": "",
