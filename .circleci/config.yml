@@ -15,7 +15,7 @@ jobs:
           DB_USER: root
           DB_NAME: loki
       - image: circleci/mysql:8.0.4
-        command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin && mysql -h 127.0.0.1 -u root -e "CREATE DATABASE loki && mysql -h 127.0.0.1 -u root -e "CREATE DATABASE loki_test"]
+        command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin && mysql -h 127.0.0.1 -u root -e 'CREATE DATABASE loki '&& mysql -h 127.0.0.1 -u root -e 'CREATE DATABASE loki_test'"
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
           - MYSQL_ROOT_HOST: '%'
