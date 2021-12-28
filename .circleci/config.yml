@@ -27,10 +27,10 @@ jobs:
           command: npm install
       - run: 
           name: Create Main Database
-          command: mysql -h 127.0.0.1 -u root -e "CREATE DATABASE loki"
+          command: mysqld -h 127.0.0.1 -u root -e "CREATE DATABASE loki"
       - run: 
           name: Create Test Database
-          command: mysql -h 127.0.0.1 -u root -e "CREATE DATABASE loki_test"
+          command: mysqld -h 127.0.0.1 -u root -e "CREATE DATABASE loki_test"
       - run: 
           name: Database migration
           command: npm run exec migrate
