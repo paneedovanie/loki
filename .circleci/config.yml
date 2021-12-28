@@ -14,7 +14,7 @@ jobs:
           DB_HOST: localhost
           DB_USER: root
       - image: circleci/mysql:8.0.4
-        command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin"]
+        command: [--default-authentication-plugin=mysql_native_password]
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
           - MYSQL_ROOT_HOST: '%'
