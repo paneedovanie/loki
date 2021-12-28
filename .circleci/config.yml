@@ -9,11 +9,21 @@ jobs:
   test: 
     docker: 
       - image: cimg/node:14.13.0
+      - image: circleci/mysql:8.0.4
+        command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin"]
+        environment:
+          - MYSQL_ROOT_HOST: '%'
+          - MYSQL_ROOT_PASSWORD: root
+          - MYSQL_USER: edo
+          - MYSQL_PASSWORD: edo
     steps:
       - checkout
       - run: 
           name: Install Dependencies
           command: npm install
+      - run: 
+          name: Setup Database Schema
+          command: npm run exec db:refresh
       - run:
           name: Run Unit Tests
           command: npm run test:unit
