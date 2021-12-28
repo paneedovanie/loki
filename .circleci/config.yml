@@ -14,7 +14,7 @@ jobs:
           DB_HOST: localhost
           DB_USER: root
           DB_NAME: loki
-      - image: circleci/mysql:5.7
+      - image: circleci/mysql:8.0.4
         command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_bin"]
         environment:
           - MYSQL_ALLOW_EMPTY_PASSWORD: 'true'
