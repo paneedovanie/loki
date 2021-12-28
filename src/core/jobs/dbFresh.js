@@ -13,10 +13,10 @@ module.exports = async () => {
 
   switch (config.dbType) {
     case 'mysql':
-      const sql = `DROP DATABASE ${config.dbName}; CREATE DATABASE ${config.dbName};`
+      const sql = `DROP DATABASE [IF EXISTS] ${config.dbName}; CREATE DATABASE ${config.dbName};`
       await query(sql)
 
-      await query(`DROP DATABASE loki_test; CREATE DATABASE loki_test;`)
+      await query(`DROP DATABASE [IF EXISTS] loki_test; CREATE DATABASE loki_test;`)
 
       if (fs.existsSync(seededPath))
         fs.unlinkSync(seededPath)
